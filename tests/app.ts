@@ -1,14 +1,17 @@
-import { listen as server, PORT } from '../app';
+import app from '../app';
 import { expect } from 'chai';
+import request from 'supertest';
 
 describe('Hello API', () => {
-  after((done) => {
-    server.close(done);
-  });
+  describe('server', () => {
+    it('should run', async () => {
+      const resp = await request(app).get('/');
+      expect(resp.status).to.equal(404);
+    });
 
-  it('should start the app on port 3000', () => {
-    expect(PORT).to.equal(3000);
+    it('should have a healthcheck', async () => {
+      const resp = await request(app).get('/_meta/health');
+      expect(resp.status).to.equal(200);
+    });
   });
-
-  describe('Save username / dob', () => {});
 });
