@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 const app = express();
 
 const PORT = process.env.PORT || 3000;
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/hello';
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/hello-api';
 
 mongoose.connect(MONGO_URL, () => {
   console.log('connected to DB');

@@ -15,7 +15,7 @@ interface helloModelInterface extends mongoose.Model<HelloDoc> {
 }
 
 const HelloSchema = new Schema({
-  username: { type: String, required: true },
+  username: { type: String, required: true, unique: true, index: true },
   dateOfBirth: { type: String, required: true },
 });
 

@@ -29,11 +29,23 @@ helloRouter.put('/:username', async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'dateOfBirth is in the future' });
   }
 
+  let helloObj;
   const dateOfBirth = req.body.dateOfBirth;
-  const helloObj = Hello.build({ username, dateOfBirth });
 
-  await helloObj.save();
-  return res.sendStatus(204);
+  try {
+    helloObj = await Hello.findOne({ username: username }).exec();
+    // already exist => update
+    if (helloObj) {
+      helloObj.dateOfBirth = dateOfBirth;
+      // doesn't exist => create
+    } else {
+      helloObj = Hello.build({ username, dateOfBirth });
+    }
+    await helloObj.save();
+    return res.sendStatus(204);
+  } catch (error) {
+    return res.sendStatus(500).json({ message: `an error occured: ${error}` });
+  }
 });
 
 export default helloRouter;
