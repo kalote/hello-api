@@ -9,12 +9,26 @@ _Note: the application expect a mongodb instance running on default port 27017. 
 
 ## run locally
 
+Create a `.env` file with the following elements:
+
+```
+MONGO_URL=mongodb://localhost:27017/hello-api
+PORT=3000
+```
+
+Then run:
+
 ```
 npm i
 npm start
 ```
 
-Access the API on http://localhost:3000/hello/
+Access the API on http://localhost:3000/:
+
+- GET /\_meta/health: liveness check
+- GET /\_meta/ready: readiness check
+- PUT /hello/:username + {dateOfBirth: 'YYYY-MM-DD'}: save/update info
+- GET /hello/:username: returns hello birthday message
 
 ## development server
 
@@ -26,6 +40,8 @@ npm start:dev
 ```
 
 ## Test
+
+To run the test (make sure Mongo is running):
 
 ```
 npm i
