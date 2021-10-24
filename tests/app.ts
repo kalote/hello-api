@@ -2,7 +2,7 @@ import app from '../app';
 import { expect } from 'chai';
 import request from 'supertest';
 
-describe('server', () => {
+describe('API', () => {
   it('should run', async () => {
     const resp = await request(app).get('/');
     expect(resp.status).to.equal(404);
