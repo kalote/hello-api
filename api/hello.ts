@@ -1,6 +1,4 @@
-import { Router, Request, Response } from 'express';
-import { Hello } from '../model/hello';
-import moment from 'moment';
+import { Router } from 'express';
 import { createFunction } from '../controllers/helloCreate';
 import { getFunction } from '../controllers/helloRead';
 
