@@ -38,7 +38,7 @@ jobs:
           command: |
             set +x
             docker build -t quay.io/$DOCKER_LOGIN/hello-api:latest .
-            echo $DOCKER_PWD | docker login quay.io -u $DOCKER_LOGIN
+            echo $DOCKER_PWD | docker login quay.io -u $DOCKER_LOGIN --password-stdin
             docker push quay.io/$DOCKER_LOGIN/hello-api:latest
 
 # Invoke jobs via workflows
