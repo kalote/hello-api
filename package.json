@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node app.ts",
+    "start": "NODE_PATH=./build node build/app.js",
+    "build": "tsc -p .",
     "start:dev": "nodemon app.ts",
     "test": "NODE_ENV=test TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts' --exit"
   },

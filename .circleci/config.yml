@@ -12,7 +12,7 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
       - image: cimg/node:15.1
-      - image: mongo:4.1.6-xenial 
+      - image: mongo:4.1.6-xenial
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
@@ -32,6 +32,14 @@ jobs:
       - run:
           name: Run Tests
           command: npm run test
+      - setup_remote_docker
+      - run:
+          name: Build & Push Docker image
+          command: |
+            set +x
+            docker build -t quay.io/$DOCKER_LOGIN/hello-api:latest .
+            echo $DOCKER_PWD | docker login quay.io -u $DOCKER_LOGIN
+            docker push quay.io/$DOCKER_LOGIN/hello-api:latest
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
