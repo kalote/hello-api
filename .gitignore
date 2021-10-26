@@ -1,3 +1,16 @@
+# node
 node_modules
 .env
+
+# TypeScript
 build
+
+# Local .terraform directories
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json

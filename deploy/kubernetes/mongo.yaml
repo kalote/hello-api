@@ -1,0 +1,21 @@
+apiVersion: apps/v1beta2
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  serviceName: 'mongo'
+  replicas: 1
+  selector:
+    matchLabels:
+      role: mongo
+  template:
+    metadata:
+      labels:
+        role: mongo
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: mongo
+          image: mongo:4.0
+          ports:
+            - containerPort: 27017
