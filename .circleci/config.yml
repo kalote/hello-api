@@ -6,6 +6,7 @@ version: 2.1
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   test:
+    working_directory: ~/helloapi
     environment:
       NODE_ENV: 'test'
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
@@ -32,6 +33,14 @@ jobs:
       - run:
           name: Run Tests
           command: npm run test
+
+  deploytodocker:
+    working_directory: ~/helloapi
+    environment:
+      NODE_ENV: 'test'
+    docker:
+      - image: cimg/node:15.1
+    steps:
       - setup_remote_docker
       - run:
           name: Build & Push Docker image
@@ -47,3 +56,6 @@ workflows:
   hello-api-ci:
     jobs:
       - test
+      - deploytodocker:
+        requires:
+          - test
