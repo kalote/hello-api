@@ -64,10 +64,10 @@ workflows:
   hello-api-ci:
     jobs:
       - checkout_code
-      - install_dep
+      - install_dep:
           requires:
             - checkout_code
-      - test
+      - test:
           requires:
             - checkout_code
             - install_dep
