@@ -33,11 +33,8 @@ jobs:
       - run:
           name: Run Tests
           command: npm run test
-
   deploytodocker:
     working_directory: ~/helloapi
-    environment:
-      NODE_ENV: 'test'
     docker:
       - image: cimg/node:15.1
     steps:
@@ -57,5 +54,5 @@ workflows:
     jobs:
       - test
       - deploytodocker:
-        requires:
-          - test
+          requires:
+            - test
