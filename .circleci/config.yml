@@ -52,6 +52,8 @@ jobs:
       - image: cimg/node:15.1
     steps:
       - setup_remote_docker
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Build & Push Docker image
           command: |
