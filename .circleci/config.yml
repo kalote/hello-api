@@ -5,36 +5,49 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
+  checkout_code:
+    docker:
+      - image: cimg/node:15.1
+    working_directory: ~/hello-api
+    steps:
+      - checkout
+      - save_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/hello-api
+  install_dep:
+    docker:
+      - image: cimg/node:15.1
+    working_directory: ~/hello-api
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - v1-dependencies-us-{{ checksum "~/hello-api/package.json" }}
+            - v1-dependencies-us-
+      - run:
+          name: Install Dependencies hello-api
+          command: npm install
+      - save_cache:
+          key: v1-dependencies-us-{{ checksum "~/hello-api/package.json" }}
+          paths:
+            - ~/hello-api/node_modules
   test:
-    working_directory: ~/helloapi
-    environment:
-      NODE_ENV: 'test'
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
       - image: cimg/node:15.1
       - image: mongo:4.1.6-xenial
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    working_directory: ~/hello-api
     steps:
-      - checkout
       - restore_cache:
-          # See the configuration reference documentation for more details on using restore_cache and save_cache steps
-          # https://circleci.com/docs/2.0/configuration-reference/?section=reference#save_cache
-          keys:
-            - node-deps-v1-{{ .Branch }}-{{checksum "package-lock.json"}}
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: v1-dependencies-us-{{ checksum "~/hello-api/package.json" }}
       - run:
-          name: install packages
-          command: npm ci
-      - save_cache:
-          key: node-deps-v1-{{ .Branch }}-{{checksum "package-lock.json"}}
-          paths:
-            - ~/.npm
-      - run:
-          name: Run Tests
+          name: Test hello-api
           command: npm run test
   deploytodocker:
-    working_directory: ~/helloapi
+    working_directory: ~/hello-api
     docker:
       - image: cimg/node:15.1
     steps:
@@ -47,12 +60,17 @@ jobs:
             echo $DOCKER_PWD | docker login quay.io -u $DOCKER_LOGIN --password-stdin
             docker push quay.io/$DOCKER_LOGIN/hello-api:latest
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   hello-api-ci:
     jobs:
+      - checkout_code
+      - install_dep
+          requires:
+            - checkout_code
       - test
+          requires:
+            - checkout_code
+            - install_dep
       - deploytodocker:
           requires:
             - test
